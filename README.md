@@ -1,7 +1,7 @@
 UIImageView+PlayGIF
 ===================
 
-<img src="https://raw.githubusercontent.com/yfme/UIImageView-PlayGIF/master/screenshot.gif" width="314px" style="width: 314px;" />
+<img src="https://raw.githubusercontent.com/yfme/UIImageView-PlayGIF/master/screenshot.gif" width="157px" style="width: 157px;" />
 
 ===================
 UIImageView category for playing GIF. Simple, high perfomence, low memory footprint.
