@@ -23,8 +23,8 @@
 		751AD8F418E00C9000FA24A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8D618E00C9000FA24A8 /* UIKit.framework */; };
 		751AD8FC18E00C9100FA24A8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */; };
 		751AD8FE18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */; };
-		751AD90918E00D2F00FA24A8 /* UIImageView+PlayGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD90818E00D2F00FA24A8 /* UIImageView+PlayGIF.m */; };
 		75A9384018E081A1002E4AB3 /* car.gif in Resources */ = {isa = PBXBuildFile; fileRef = 75A9383F18E081A1002E4AB3 /* car.gif */; };
+		75AEF98A18E1896E00DA0C90 /* UIImageView+PlayGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 75AEF98918E1896E00DA0C90 /* UIImageView+PlayGIF.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,9 +59,9 @@
 		751AD8F918E00C9100FA24A8 /* UIImageView+PlayGIFTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UIImageView+PlayGIFTests-Info.plist"; sourceTree = "<group>"; };
 		751AD8FB18E00C9100FA24A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIImageView_PlayGIFTests.m; sourceTree = "<group>"; };
-		751AD90718E00D2F00FA24A8 /* UIImageView+PlayGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayGIF.h"; sourceTree = "<group>"; };
-		751AD90818E00D2F00FA24A8 /* UIImageView+PlayGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayGIF.m"; sourceTree = "<group>"; };
 		75A9383F18E081A1002E4AB3 /* car.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = car.gif; sourceTree = "<group>"; };
+		75AEF98818E1896E00DA0C90 /* UIImageView+PlayGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayGIF.h"; sourceTree = "<group>"; };
+		75AEF98918E1896E00DA0C90 /* UIImageView+PlayGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayGIF.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,13 +125,12 @@
 		751AD8D818E00C9000FA24A8 /* UIImageView+PlayGIF */ = {
 			isa = PBXGroup;
 			children = (
+				75AEF98718E1896E00DA0C90 /* UIImageView+PlayGIF */,
 				751AD8E118E00C9000FA24A8 /* AppDelegate.h */,
 				751AD8E218E00C9000FA24A8 /* AppDelegate.m */,
 				751AD8E418E00C9000FA24A8 /* Main.storyboard */,
 				751AD8E718E00C9000FA24A8 /* ViewController.h */,
 				751AD8E818E00C9000FA24A8 /* ViewController.m */,
-				751AD90718E00D2F00FA24A8 /* UIImageView+PlayGIF.h */,
-				751AD90818E00D2F00FA24A8 /* UIImageView+PlayGIF.m */,
 				75A9383F18E081A1002E4AB3 /* car.gif */,
 				751AD8EA18E00C9000FA24A8 /* Images.xcassets */,
 				751AD8D918E00C9000FA24A8 /* Supporting Files */,
@@ -166,6 +165,15 @@
 				751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		75AEF98718E1896E00DA0C90 /* UIImageView+PlayGIF */ = {
+			isa = PBXGroup;
+			children = (
+				75AEF98818E1896E00DA0C90 /* UIImageView+PlayGIF.h */,
+				75AEF98918E1896E00DA0C90 /* UIImageView+PlayGIF.m */,
+			);
+			path = "UIImageView+PlayGIF";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,7 +277,7 @@
 				751AD8E918E00C9000FA24A8 /* ViewController.m in Sources */,
 				751AD8E318E00C9000FA24A8 /* AppDelegate.m in Sources */,
 				751AD8DF18E00C9000FA24A8 /* main.m in Sources */,
-				751AD90918E00D2F00FA24A8 /* UIImageView+PlayGIF.m in Sources */,
+				75AEF98A18E1896E00DA0C90 /* UIImageView+PlayGIF.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
