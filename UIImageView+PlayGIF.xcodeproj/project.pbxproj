@@ -1,0 +1,493 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7507EAD518E1517D000BE264 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7507EAD418E1517D000BE264 /* QuartzCore.framework */; };
+		7507EAD718E15182000BE264 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7507EAD618E15182000BE264 /* ImageIO.framework */; };
+		751AD8D318E00C9000FA24A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8D218E00C9000FA24A8 /* Foundation.framework */; };
+		751AD8D518E00C9000FA24A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8D418E00C9000FA24A8 /* CoreGraphics.framework */; };
+		751AD8D718E00C9000FA24A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8D618E00C9000FA24A8 /* UIKit.framework */; };
+		751AD8DD18E00C9000FA24A8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 751AD8DB18E00C9000FA24A8 /* InfoPlist.strings */; };
+		751AD8DF18E00C9000FA24A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD8DE18E00C9000FA24A8 /* main.m */; };
+		751AD8E318E00C9000FA24A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD8E218E00C9000FA24A8 /* AppDelegate.m */; };
+		751AD8E618E00C9000FA24A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 751AD8E418E00C9000FA24A8 /* Main.storyboard */; };
+		751AD8E918E00C9000FA24A8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD8E818E00C9000FA24A8 /* ViewController.m */; };
+		751AD8EB18E00C9000FA24A8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 751AD8EA18E00C9000FA24A8 /* Images.xcassets */; };
+		751AD8F218E00C9000FA24A8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8F118E00C9000FA24A8 /* XCTest.framework */; };
+		751AD8F318E00C9000FA24A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8D218E00C9000FA24A8 /* Foundation.framework */; };
+		751AD8F418E00C9000FA24A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751AD8D618E00C9000FA24A8 /* UIKit.framework */; };
+		751AD8FC18E00C9100FA24A8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */; };
+		751AD8FE18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */; };
+		751AD90918E00D2F00FA24A8 /* UIImageView+PlayGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD90818E00D2F00FA24A8 /* UIImageView+PlayGIF.m */; };
+		75A9384018E081A1002E4AB3 /* car.gif in Resources */ = {isa = PBXBuildFile; fileRef = 75A9383F18E081A1002E4AB3 /* car.gif */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		751AD8F518E00C9100FA24A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 751AD8C718E00C9000FA24A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 751AD8CE18E00C9000FA24A8;
+			remoteInfo = "UIImageView+PlayGIF";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7507EAD418E1517D000BE264 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		7507EAD618E15182000BE264 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		751AD8CF18E00C9000FA24A8 /* UIImageView+PlayGIF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UIImageView+PlayGIF.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		751AD8D218E00C9000FA24A8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		751AD8D418E00C9000FA24A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		751AD8D618E00C9000FA24A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		751AD8DA18E00C9000FA24A8 /* UIImageView+PlayGIF-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UIImageView+PlayGIF-Info.plist"; sourceTree = "<group>"; };
+		751AD8DC18E00C9000FA24A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		751AD8DE18E00C9000FA24A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		751AD8E018E00C9000FA24A8 /* UIImageView+PlayGIF-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayGIF-Prefix.pch"; sourceTree = "<group>"; };
+		751AD8E118E00C9000FA24A8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		751AD8E218E00C9000FA24A8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		751AD8E518E00C9000FA24A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		751AD8E718E00C9000FA24A8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		751AD8E818E00C9000FA24A8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		751AD8EA18E00C9000FA24A8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		751AD8F018E00C9000FA24A8 /* UIImageView+PlayGIFTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UIImageView+PlayGIFTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		751AD8F118E00C9000FA24A8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		751AD8F918E00C9100FA24A8 /* UIImageView+PlayGIFTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UIImageView+PlayGIFTests-Info.plist"; sourceTree = "<group>"; };
+		751AD8FB18E00C9100FA24A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIImageView_PlayGIFTests.m; sourceTree = "<group>"; };
+		751AD90718E00D2F00FA24A8 /* UIImageView+PlayGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayGIF.h"; sourceTree = "<group>"; };
+		751AD90818E00D2F00FA24A8 /* UIImageView+PlayGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayGIF.m"; sourceTree = "<group>"; };
+		75A9383F18E081A1002E4AB3 /* car.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = car.gif; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		751AD8CC18E00C9000FA24A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7507EAD718E15182000BE264 /* ImageIO.framework in Frameworks */,
+				7507EAD518E1517D000BE264 /* QuartzCore.framework in Frameworks */,
+				751AD8D518E00C9000FA24A8 /* CoreGraphics.framework in Frameworks */,
+				751AD8D718E00C9000FA24A8 /* UIKit.framework in Frameworks */,
+				751AD8D318E00C9000FA24A8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		751AD8ED18E00C9000FA24A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751AD8F218E00C9000FA24A8 /* XCTest.framework in Frameworks */,
+				751AD8F418E00C9000FA24A8 /* UIKit.framework in Frameworks */,
+				751AD8F318E00C9000FA24A8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		751AD8C618E00C9000FA24A8 = {
+			isa = PBXGroup;
+			children = (
+				751AD8D818E00C9000FA24A8 /* UIImageView+PlayGIF */,
+				751AD8F718E00C9100FA24A8 /* UIImageView+PlayGIFTests */,
+				751AD8D118E00C9000FA24A8 /* Frameworks */,
+				751AD8D018E00C9000FA24A8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		751AD8D018E00C9000FA24A8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				751AD8CF18E00C9000FA24A8 /* UIImageView+PlayGIF.app */,
+				751AD8F018E00C9000FA24A8 /* UIImageView+PlayGIFTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		751AD8D118E00C9000FA24A8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7507EAD618E15182000BE264 /* ImageIO.framework */,
+				7507EAD418E1517D000BE264 /* QuartzCore.framework */,
+				751AD8D218E00C9000FA24A8 /* Foundation.framework */,
+				751AD8D418E00C9000FA24A8 /* CoreGraphics.framework */,
+				751AD8D618E00C9000FA24A8 /* UIKit.framework */,
+				751AD8F118E00C9000FA24A8 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		751AD8D818E00C9000FA24A8 /* UIImageView+PlayGIF */ = {
+			isa = PBXGroup;
+			children = (
+				751AD8E118E00C9000FA24A8 /* AppDelegate.h */,
+				751AD8E218E00C9000FA24A8 /* AppDelegate.m */,
+				751AD8E418E00C9000FA24A8 /* Main.storyboard */,
+				751AD8E718E00C9000FA24A8 /* ViewController.h */,
+				751AD8E818E00C9000FA24A8 /* ViewController.m */,
+				751AD90718E00D2F00FA24A8 /* UIImageView+PlayGIF.h */,
+				751AD90818E00D2F00FA24A8 /* UIImageView+PlayGIF.m */,
+				75A9383F18E081A1002E4AB3 /* car.gif */,
+				751AD8EA18E00C9000FA24A8 /* Images.xcassets */,
+				751AD8D918E00C9000FA24A8 /* Supporting Files */,
+			);
+			path = "UIImageView+PlayGIF";
+			sourceTree = "<group>";
+		};
+		751AD8D918E00C9000FA24A8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				751AD8DA18E00C9000FA24A8 /* UIImageView+PlayGIF-Info.plist */,
+				751AD8DB18E00C9000FA24A8 /* InfoPlist.strings */,
+				751AD8DE18E00C9000FA24A8 /* main.m */,
+				751AD8E018E00C9000FA24A8 /* UIImageView+PlayGIF-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		751AD8F718E00C9100FA24A8 /* UIImageView+PlayGIFTests */ = {
+			isa = PBXGroup;
+			children = (
+				751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */,
+				751AD8F818E00C9100FA24A8 /* Supporting Files */,
+			);
+			path = "UIImageView+PlayGIFTests";
+			sourceTree = "<group>";
+		};
+		751AD8F818E00C9100FA24A8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				751AD8F918E00C9100FA24A8 /* UIImageView+PlayGIFTests-Info.plist */,
+				751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		751AD8CE18E00C9000FA24A8 /* UIImageView+PlayGIF */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 751AD90118E00C9100FA24A8 /* Build configuration list for PBXNativeTarget "UIImageView+PlayGIF" */;
+			buildPhases = (
+				751AD8CB18E00C9000FA24A8 /* Sources */,
+				751AD8CC18E00C9000FA24A8 /* Frameworks */,
+				751AD8CD18E00C9000FA24A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "UIImageView+PlayGIF";
+			productName = "UIImageView+PlayGIF";
+			productReference = 751AD8CF18E00C9000FA24A8 /* UIImageView+PlayGIF.app */;
+			productType = "com.apple.product-type.application";
+		};
+		751AD8EF18E00C9000FA24A8 /* UIImageView+PlayGIFTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 751AD90418E00C9100FA24A8 /* Build configuration list for PBXNativeTarget "UIImageView+PlayGIFTests" */;
+			buildPhases = (
+				751AD8EC18E00C9000FA24A8 /* Sources */,
+				751AD8ED18E00C9000FA24A8 /* Frameworks */,
+				751AD8EE18E00C9000FA24A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				751AD8F618E00C9100FA24A8 /* PBXTargetDependency */,
+			);
+			name = "UIImageView+PlayGIFTests";
+			productName = "UIImageView+PlayGIFTests";
+			productReference = 751AD8F018E00C9000FA24A8 /* UIImageView+PlayGIFTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		751AD8C718E00C9000FA24A8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = yangfei.me;
+				TargetAttributes = {
+					751AD8EF18E00C9000FA24A8 = {
+						TestTargetID = 751AD8CE18E00C9000FA24A8;
+					};
+				};
+			};
+			buildConfigurationList = 751AD8CA18E00C9000FA24A8 /* Build configuration list for PBXProject "UIImageView+PlayGIF" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 751AD8C618E00C9000FA24A8;
+			productRefGroup = 751AD8D018E00C9000FA24A8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				751AD8CE18E00C9000FA24A8 /* UIImageView+PlayGIF */,
+				751AD8EF18E00C9000FA24A8 /* UIImageView+PlayGIFTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		751AD8CD18E00C9000FA24A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751AD8EB18E00C9000FA24A8 /* Images.xcassets in Resources */,
+				75A9384018E081A1002E4AB3 /* car.gif in Resources */,
+				751AD8DD18E00C9000FA24A8 /* InfoPlist.strings in Resources */,
+				751AD8E618E00C9000FA24A8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		751AD8EE18E00C9000FA24A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751AD8FC18E00C9100FA24A8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		751AD8CB18E00C9000FA24A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751AD8E918E00C9000FA24A8 /* ViewController.m in Sources */,
+				751AD8E318E00C9000FA24A8 /* AppDelegate.m in Sources */,
+				751AD8DF18E00C9000FA24A8 /* main.m in Sources */,
+				751AD90918E00D2F00FA24A8 /* UIImageView+PlayGIF.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		751AD8EC18E00C9000FA24A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				751AD8FE18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		751AD8F618E00C9100FA24A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 751AD8CE18E00C9000FA24A8 /* UIImageView+PlayGIF */;
+			targetProxy = 751AD8F518E00C9100FA24A8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		751AD8DB18E00C9000FA24A8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				751AD8DC18E00C9000FA24A8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		751AD8E418E00C9000FA24A8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				751AD8E518E00C9000FA24A8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				751AD8FB18E00C9100FA24A8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		751AD8FF18E00C9100FA24A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		751AD90018E00C9100FA24A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		751AD90218E00C9100FA24A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UIImageView+PlayGIF/UIImageView+PlayGIF-Prefix.pch";
+				INFOPLIST_FILE = "UIImageView+PlayGIF/UIImageView+PlayGIF-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		751AD90318E00C9100FA24A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UIImageView+PlayGIF/UIImageView+PlayGIF-Prefix.pch";
+				INFOPLIST_FILE = "UIImageView+PlayGIF/UIImageView+PlayGIF-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		751AD90518E00C9100FA24A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/UIImageView+PlayGIF.app/UIImageView+PlayGIF";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UIImageView+PlayGIF/UIImageView+PlayGIF-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "UIImageView+PlayGIFTests/UIImageView+PlayGIFTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		751AD90618E00C9100FA24A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/UIImageView+PlayGIF.app/UIImageView+PlayGIF";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UIImageView+PlayGIF/UIImageView+PlayGIF-Prefix.pch";
+				INFOPLIST_FILE = "UIImageView+PlayGIFTests/UIImageView+PlayGIFTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		751AD8CA18E00C9000FA24A8 /* Build configuration list for PBXProject "UIImageView+PlayGIF" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				751AD8FF18E00C9100FA24A8 /* Debug */,
+				751AD90018E00C9100FA24A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		751AD90118E00C9100FA24A8 /* Build configuration list for PBXNativeTarget "UIImageView+PlayGIF" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				751AD90218E00C9100FA24A8 /* Debug */,
+				751AD90318E00C9100FA24A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		751AD90418E00C9100FA24A8 /* Build configuration list for PBXNativeTarget "UIImageView+PlayGIFTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				751AD90518E00C9100FA24A8 /* Debug */,
+				751AD90618E00C9100FA24A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 751AD8C718E00C9000FA24A8 /* Project object */;
+}
