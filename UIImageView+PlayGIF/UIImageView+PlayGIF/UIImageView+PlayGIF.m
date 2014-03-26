@@ -49,9 +49,9 @@ static CGImageSourceRef     _gifSourceRef;
     if (!self.displayLink && (self.gifData || self.gifPath)) {
         CGImageSourceRef gifSourceRef;
         if (self.gifData) {
-            gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), (__bridge CFDictionaryRef)[self gifPropertyDict]);
+            gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), NULL);
         }else{
-            gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], (__bridge CFDictionaryRef)[self gifPropertyDict]);
+            gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
         }
         if (!gifSourceRef) {
             return;
@@ -74,7 +74,7 @@ static CGImageSourceRef     _gifSourceRef;
 - (void)play{
 	_index ++;
 	_index = _index%_frameCount;
-	CGImageRef ref = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, (__bridge CFDictionaryRef)[self gifPropertyDict]);
+	CGImageRef ref = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
 	self.layer.contents = (__bridge id)(ref);
     CGImageRelease(ref);
     self.displayLink.frameInterval = (NSInteger)([self frameDurationAtIndex:_index]/self.displayLink.duration+0.5);
@@ -84,19 +84,8 @@ static CGImageSourceRef     _gifSourceRef;
     return self.displayLink?YES:NO;
 }
 
-- (NSDictionary *)gifPropertyDict{
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
-    [dict setObject:[NSNumber numberWithBool:NO]
-             forKey:(NSString *)kCGImagePropertyGIFHasGlobalColorMap];
-    [dict setObject:[NSNumber numberWithInt:0]
-             forKey:(NSString *)kCGImagePropertyGIFLoopCount];
-    NSDictionary *gifProperties = [NSDictionary dictionaryWithObject:dict
-                                                              forKey:(NSString*)kCGImagePropertyGIFDictionary];
-    return gifProperties;
-}
-
 - (float)frameDurationAtIndex:(size_t)index{
-    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(_gifSourceRef, index, (__bridge CFDictionaryRef)[self gifPropertyDict]);
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(_gifSourceRef, index, NULL);
     NSDictionary *dict = (__bridge NSDictionary *)dictRef;
     NSDictionary *gifDict = (dict[(NSString *)kCGImagePropertyGIFDictionary]);
     NSNumber *unclampedDelayTime = gifDict[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];

@@ -24,6 +24,7 @@
 		751AD8FC18E00C9100FA24A8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */; };
 		751AD8FE18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */; };
 		75A9384018E081A1002E4AB3 /* car.gif in Resources */ = {isa = PBXBuildFile; fileRef = 75A9383F18E081A1002E4AB3 /* car.gif */; };
+		75AE32E218E2C8C800046B70 /* YFGIFImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75AE32E118E2C8C800046B70 /* YFGIFImageView.m */; };
 		75AEF98A18E1896E00DA0C90 /* UIImageView+PlayGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 75AEF98918E1896E00DA0C90 /* UIImageView+PlayGIF.m */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,8 @@
 		751AD8FB18E00C9100FA24A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		751AD8FD18E00C9100FA24A8 /* UIImageView_PlayGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIImageView_PlayGIFTests.m; sourceTree = "<group>"; };
 		75A9383F18E081A1002E4AB3 /* car.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = car.gif; sourceTree = "<group>"; };
+		75AE32E018E2C8C800046B70 /* YFGIFImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YFGIFImageView.h; sourceTree = "<group>"; };
+		75AE32E118E2C8C800046B70 /* YFGIFImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YFGIFImageView.m; sourceTree = "<group>"; };
 		75AEF98818E1896E00DA0C90 /* UIImageView+PlayGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayGIF.h"; sourceTree = "<group>"; };
 		75AEF98918E1896E00DA0C90 /* UIImageView+PlayGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayGIF.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				75AEF98718E1896E00DA0C90 /* UIImageView+PlayGIF */,
+				75AE32DF18E2C8C800046B70 /* YFGIFImageView */,
 				751AD8E118E00C9000FA24A8 /* AppDelegate.h */,
 				751AD8E218E00C9000FA24A8 /* AppDelegate.m */,
 				751AD8E418E00C9000FA24A8 /* Main.storyboard */,
@@ -165,6 +169,15 @@
 				751AD8FA18E00C9100FA24A8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		75AE32DF18E2C8C800046B70 /* YFGIFImageView */ = {
+			isa = PBXGroup;
+			children = (
+				75AE32E018E2C8C800046B70 /* YFGIFImageView.h */,
+				75AE32E118E2C8C800046B70 /* YFGIFImageView.m */,
+			);
+			path = YFGIFImageView;
 			sourceTree = "<group>";
 		};
 		75AEF98718E1896E00DA0C90 /* UIImageView+PlayGIF */ = {
@@ -278,6 +291,7 @@
 				751AD8E318E00C9000FA24A8 /* AppDelegate.m in Sources */,
 				751AD8DF18E00C9000FA24A8 /* main.m in Sources */,
 				75AEF98A18E1896E00DA0C90 /* UIImageView+PlayGIF.m in Sources */,
+				75AE32E218E2C8C800046B70 /* YFGIFImageView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
