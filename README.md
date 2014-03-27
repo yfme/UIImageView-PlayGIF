@@ -1,10 +1,10 @@
-UIImageView+PlayGIF
+UIImageView-PlayGIF
 ===================
 
 <img src="https://raw.githubusercontent.com/yfme/UIImageView-PlayGIF/master/screenshot1.gif" width="200px" style="width: 200px;" />
 
 ===================
-UIImageView category/subclass for playing GIF. Simple, high perfomence, low memory footprint.
+UIImageView category/subclass for playing GIF. Simple, high performance, low memory footprint.
 
  *  Dependencies:
   *      `- QuartzCore.framework`
@@ -41,7 +41,7 @@ UIImageView category/subclass for playing GIF. Simple, high perfomence, low memo
 ```objc
 //
 //  UIImageView+PlayGIF.h
-//  UIImageView+PlayGIF
+//  UIImageView-PlayGIF
 //
 //  Created by Yang Fei on 14-3-25.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
@@ -63,7 +63,7 @@ UIImageView category/subclass for playing GIF. Simple, high perfomence, low memo
 ```objc
 //
 //  YFGIFImageView.h
-//  UIImageView+PlayGIF
+//  UIImageView-PlayGIF
 //
 //  Created by Yang Fei on 14-3-26.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
@@ -84,5 +84,5 @@ UIImageView category/subclass for playing GIF. Simple, high perfomence, low memo
 
 ## License
 
-UIImageView+PlayGIF is available under the MIT license. See the LICENSE file for more info.
+UIImageView-PlayGIF is available under the MIT license. See the LICENSE file for more info.
 

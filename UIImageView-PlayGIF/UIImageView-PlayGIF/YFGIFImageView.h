@@ -1,6 +1,6 @@
 //
 //  YFGIFImageView.h
-//  UIImageView+PlayGIF
+//  UIImageView-PlayGIF
 //
 //  Created by Yang Fei on 14-3-26.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.

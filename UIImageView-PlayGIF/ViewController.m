@@ -1,6 +1,6 @@
 //
 //  ViewController.m
-//  UIImageView+PlayGIF
+//  UIImageView-PlayGIF
 //
 //  Created by Yang Fei on 14-3-25.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
@@ -45,11 +45,12 @@
         gifView.backgroundColor = [UIColor darkGrayColor];
         gifView.gifData = gifData;
         [self.view addSubview:gifView];
+        // notice: before start, content is nil. You can set image for yourself
+        [gifView startGIF];
         
         gifView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
         [gifView addGestureRecognizer:tap];
-        [gifView startGIF];
 	}
 }
 

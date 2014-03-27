@@ -1,8 +1,8 @@
 //
 //  UIImageView_PlayGIFTests.m
-//  UIImageView+PlayGIFTests
+//  UIImageView-PlayGIFTests
 //
-//  Created by Yang Fei on 14-3-25.
+//  Created by Yang Fei on 14-3-27.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
 //
 

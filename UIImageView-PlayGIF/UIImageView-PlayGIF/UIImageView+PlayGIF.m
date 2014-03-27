@@ -1,6 +1,6 @@
 //
 //  UIImageView+PlayGIF.m
-//  UIImageView+PlayGIF
+//  UIImageView-PlayGIF
 //
 //  Created by Yang Fei on 14-3-25.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
@@ -75,10 +75,10 @@ static const char * kTimestampKey       = "kTimestampKey";
 - (void)setGifPath:(NSString *)gifPath{
     objc_setAssociatedObject(self, kGifPathKey, gifPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
--(NSString *)gifData{
+-(NSData *)gifData{
     return objc_getAssociatedObject(self, kGifDataKey);
 }
-- (void)setGifData:(NSString *)gifData{
+- (void)setGifData:(NSData *)gifData{
     objc_setAssociatedObject(self, kGifDataKey, gifData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 -(NSNumber *)index{
