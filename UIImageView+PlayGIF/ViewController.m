@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "YFGIFImageView.h"
+#import "UIImageView+PlayGIF.h"
 
 @interface ViewController ()
 @end
@@ -38,7 +39,9 @@
     
     NSData *gifData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"car.gif" ofType:nil]];
     for (int i=0; i<18; i++) {
+        // user 'YFGIFImageView' or 'UIImageView+PlayGIF'
         YFGIFImageView *gifView = [[YFGIFImageView alloc] initWithFrame:CGRectMake(8+i%3*(96+8), 28+i/3*(54+8), 96, 54)];
+        //UIImageView *gifView = [[UIImageView alloc] initWithFrame:CGRectMake(8+i%3*(96+8), 28+i/3*(54+8), 96, 54)];
         gifView.backgroundColor = [UIColor darkGrayColor];
         gifView.gifData = gifData;
         [self.view addSubview:gifView];

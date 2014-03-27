@@ -1,7 +1,7 @@
 UIImageView+PlayGIF
 ===================
 
-<img src="https://raw.githubusercontent.com/yfme/UIImageView-PlayGIF/master/screenshot.gif" width="157px" style="width: 157px;" />
+<img src="https://raw.githubusercontent.com/yfme/UIImageView-PlayGIF/master/screenshot.gif" width="200px" style="width: 200px;" />
 
 ===================
 UIImageView category for playing GIF. Simple, high perfomence, low memory footprint.
@@ -17,6 +17,8 @@ UIImageView category for playing GIF. Simple, high perfomence, low memory footpr
   *      `- startGIF`
   *      `- stopGIF`
   *      `- isGIFPlaying`
+ *  P.S.:
+  *      Don't like category? Use YFGIFImageView.h/m
 
 ===================
 支持 GIF 播放的 UIImageView 类别。 简单，高效，低功耗。
@@ -32,6 +34,8 @@ UIImageView category for playing GIF. Simple, high perfomence, low memory footpr
   *      `- startGIF`      开始播放
   *      `- stopGIF`       结束播放
   *      `- isGIFPlaying`  判断是否正在播放
+ *  另外:
+  *      不想用 category？请使用 YFGIFImageView.h/m
 
 =================== 
 ```objc
@@ -50,7 +54,7 @@ UIImageView category for playing GIF. Simple, high perfomence, low memory footpr
 @interface UIImageView (PlayGIF)
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
-@property (nonatomic, strong) CADisplayLink     *displayLink;
+@property (nonatomic, strong) NSNumber          *index,*frameCount,*timestamp;
 - (void)startGIF;
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;

@@ -6,21 +6,66 @@
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
 //
 
+/**********************************************************************/
+#import <Foundation/Foundation.h>
+@interface PlayGIFManager : NSObject
+@property (nonatomic, strong) CADisplayLink     *displayLink;
+@property (nonatomic, strong) NSMutableArray    *gifViewArray;
+@property (nonatomic, strong) NSMutableArray    *gifSourceRefArray;
++ (PlayGIFManager *)shared;
+- (void)stopGIFView:(UIImageView *)view;
+@end
+@implementation PlayGIFManager
++ (PlayGIFManager *)shared{
+    static PlayGIFManager *_sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[PlayGIFManager alloc] init];
+    });
+    return _sharedInstance;
+}
+- (id)init{
+	self = [super init];
+	if (self) {
+		_gifViewArray = [NSMutableArray array];
+        _gifSourceRefArray = [NSMutableArray array];
+	}
+	return self;
+}
+- (void)play{
+    [_gifViewArray makeObjectsPerformSelector:@selector(play)];
+}
+- (void)stopDisplayLink{
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+    }
+}
+- (void)stopGIFView:(UIImageView *)view{
+    [_gifSourceRefArray removeObjectAtIndex:[_gifViewArray indexOfObject:view]];
+    [_gifViewArray removeObject:view];
+    if (_gifViewArray.count<1 && !_displayLink) {
+        [self stopDisplayLink];
+    }
+}
+@end
+/**********************************************************************/
+
 #import "UIImageView+PlayGIF.h"
 #import <objc/runtime.h>
 
 static const char * kGifPathKey         = "kGifPathKey";
 static const char * kGifDataKey         = "kGifDataKey";
-static const char * kDisplayLinkKey     = "kDisplayLinkKey";
-
-static size_t               _index;
-static size_t               _frameCount;
-static CGImageSourceRef     _gifSourceRef;
+static const char * kIndexKey           = "kIndexKey";
+static const char * kFrameCountKey      = "kFrameCountKey";
+static const char * kTimestampKey       = "kTimestampKey";
 
 @implementation UIImageView (PlayGIF)
 @dynamic gifPath;
 @dynamic gifData;
-@dynamic displayLink;
+@dynamic index;
+@dynamic frameCount;
+@dynamic timestamp;
 
 #pragma mark - ASSOCIATION
 
@@ -36,17 +81,29 @@ static CGImageSourceRef     _gifSourceRef;
 - (void)setGifData:(NSString *)gifData{
     objc_setAssociatedObject(self, kGifDataKey, gifData, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
--(CADisplayLink *)displayLink{
-    return objc_getAssociatedObject(self, kDisplayLinkKey);
+-(NSNumber *)index{
+    return objc_getAssociatedObject(self, kIndexKey);
 }
-- (void)setDisplayLink:(CADisplayLink *)displayLink{
-    objc_setAssociatedObject(self, kDisplayLinkKey, displayLink, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setIndex:(NSNumber *)index{
+    objc_setAssociatedObject(self, kIndexKey, index, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+-(NSNumber *)frameCount{
+    return objc_getAssociatedObject(self, kFrameCountKey);
+}
+- (void)setFrameCount:(NSNumber *)frameCount{
+    objc_setAssociatedObject(self, kFrameCountKey, frameCount, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+-(NSNumber *)timestamp{
+    return objc_getAssociatedObject(self, kTimestampKey);
+}
+- (void)setTimestamp:(NSNumber *)timestamp{
+    objc_setAssociatedObject(self, kTimestampKey, timestamp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - ACTIONS
 
 - (void)startGIF{
-    if (!self.displayLink && (self.gifData || self.gifPath)) {
+    if ([[PlayGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound && (self.gifData || self.gifPath)) {
         CGImageSourceRef gifSourceRef;
         if (self.gifData) {
             gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), NULL);
@@ -56,45 +113,55 @@ static CGImageSourceRef     _gifSourceRef;
         if (!gifSourceRef) {
             return;
         }
-        _gifSourceRef = gifSourceRef;
-        _frameCount = CGImageSourceGetCount(gifSourceRef);
-        self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(play)];
-        [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+        [[PlayGIFManager shared].gifSourceRefArray addObject:(__bridge id)(gifSourceRef)];
+        [[PlayGIFManager shared].gifViewArray addObject:self];
+        self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
+    }
+    if (![PlayGIFManager shared].displayLink) {
+        [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
+        [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
 }
 
 - (void)stopGIF{
-    if (self.displayLink) {
-        [self.displayLink invalidate];
-        self.displayLink = nil;
-        CFRelease(_gifSourceRef);
-    }
+    [[PlayGIFManager shared] stopGIFView:self];
 }
 
 - (void)play{
-	_index ++;
-	_index = _index%_frameCount;
-	CGImageRef ref = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
-	self.layer.contents = (__bridge id)(ref);
-    CGImageRelease(ref);
-    self.displayLink.frameInterval = (NSInteger)([self frameDurationAtIndex:_index]/self.displayLink.duration+0.5);
+    float nextFrameDuration = [self frameDurationAtIndex:MIN(self.index.integerValue+1, self.frameCount.integerValue-1)];
+    if (self.timestamp.floatValue < nextFrameDuration) {
+        self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
+        return;
+    }
+	self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
+    self.index = [NSNumber numberWithInteger:self.index.integerValue%self.frameCount.integerValue];
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([PlayGIFManager shared].gifSourceRefArray[[[PlayGIFManager shared].gifViewArray indexOfObject:self]]);
+	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
+	self.layer.contents = (__bridge id)(imageRef);
+    CGImageRelease(imageRef);
+    self.timestamp = [NSNumber numberWithFloat:0];
 }
 
 - (BOOL)isGIFPlaying{
-    return self.displayLink?YES:NO;
+    if ([[PlayGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
+        return NO;
+    }else{
+        return YES;
+    }
 }
 
 - (float)frameDurationAtIndex:(size_t)index{
-    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(_gifSourceRef, index, NULL);
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([PlayGIFManager shared].gifSourceRefArray[[[PlayGIFManager shared].gifViewArray indexOfObject:self]]);
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(ref, index, NULL);
     NSDictionary *dict = (__bridge NSDictionary *)dictRef;
     NSDictionary *gifDict = (dict[(NSString *)kCGImagePropertyGIFDictionary]);
     NSNumber *unclampedDelayTime = gifDict[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
     NSNumber *delayTime = gifDict[(NSString *)kCGImagePropertyGIFDelayTime];
     CFRelease(dictRef);
-    if ([unclampedDelayTime floatValue]) {
-        return [unclampedDelayTime floatValue];
-    }else if ([delayTime floatValue]) {
-        return [delayTime floatValue];
+    if (unclampedDelayTime.floatValue) {
+        return unclampedDelayTime.floatValue;
+    }else if (delayTime.floatValue) {
+        return delayTime.floatValue;
     }else{
         return 1/24.0;
     }

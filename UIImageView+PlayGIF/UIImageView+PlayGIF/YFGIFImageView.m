@@ -9,18 +9,18 @@
 /**********************************************************************/
 #import <Foundation/Foundation.h>
 #import "YFGIFImageView.h"
-@interface YFPlayGIFManager : NSObject
+@interface YFGIFManager : NSObject
 @property (nonatomic, strong) CADisplayLink     *displayLink;
 @property (nonatomic, strong) NSMutableArray    *gifViewArray;
-+ (YFPlayGIFManager *)shared;
++ (YFGIFManager *)shared;
 - (void)stopGIFView:(YFGIFImageView *)view;
 @end
-@implementation YFPlayGIFManager
-+ (YFPlayGIFManager *)shared{
-    static YFPlayGIFManager *_sharedInstance = nil;
+@implementation YFGIFManager
++ (YFGIFManager *)shared{
+    static YFGIFManager *_sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[YFPlayGIFManager alloc] init];
+        _sharedInstance = [[YFGIFManager alloc] init];
     });
     return _sharedInstance;
 }
@@ -54,8 +54,8 @@
 @interface YFGIFImageView(){
     size_t              _index;
     size_t              _frameCount;
-    CGImageSourceRef    _gifSourceRef;
     float               _timestamp;
+    CGImageSourceRef    _gifSourceRef;
 }
 @end
 
@@ -71,7 +71,7 @@
 }
 
 - (void)startGIF{
-    if ([[YFPlayGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
+    if ([[YFGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
         if ((self.gifData || self.gifPath)) {
             CGImageSourceRef gifSourceRef;
             if (self.gifData) {
@@ -82,14 +82,14 @@
             if (!gifSourceRef) {
                 return;
             }
-            [[YFPlayGIFManager shared].gifViewArray addObject:self];
+            [[YFGIFManager shared].gifViewArray addObject:self];
             _gifSourceRef = gifSourceRef;
             _frameCount = CGImageSourceGetCount(gifSourceRef);
         }
     }
-    if (![YFPlayGIFManager shared].displayLink) {
-        [YFPlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFPlayGIFManager shared] selector:@selector(play)];
-        [[YFPlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    if (![YFGIFManager shared].displayLink) {
+        [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
+        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
 }
 
@@ -98,13 +98,13 @@
         CFRelease(_gifSourceRef);
         _gifSourceRef = nil;
     }
-    [[YFPlayGIFManager shared] stopGIFView:self];
+    [[YFGIFManager shared] stopGIFView:self];
 }
 
 - (void)play{
     float nextFrameDuration = [self frameDurationAtIndex:MIN(_index+1, _frameCount-1)];
     if (_timestamp < nextFrameDuration) {
-        _timestamp += [YFPlayGIFManager shared].displayLink.duration;
+        _timestamp += [YFGIFManager shared].displayLink.duration;
         return;
     }
 	_index ++;
@@ -126,10 +126,10 @@
     NSNumber *unclampedDelayTime = gifDict[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
     NSNumber *delayTime = gifDict[(NSString *)kCGImagePropertyGIFDelayTime];
     CFRelease(dictRef);
-    if ([unclampedDelayTime floatValue]) {
-        return [unclampedDelayTime floatValue];
-    }else if ([delayTime floatValue]) {
-        return [delayTime floatValue];
+    if (unclampedDelayTime.floatValue) {
+        return unclampedDelayTime.floatValue;
+    }else if (delayTime.floatValue) {
+        return delayTime.floatValue;
     }else{
         return 1/24.0;
     }

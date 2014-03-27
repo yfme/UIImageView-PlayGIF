@@ -1,8 +1,8 @@
 //
-//  UIImageView+PlayGIF.h
+//  YFGIFImageView.h
 //  UIImageView+PlayGIF
 //
-//  Created by Yang Fei on 14-3-25.
+//  Created by Yang Fei on 14-3-26.
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
 //
 
@@ -19,7 +19,7 @@
  *      - stopGIF
  *      - isGIFPlaying
  *  P.S.:
- *      Don't like category? Use YFGIFImageView.h/m
+ *      Need category? Use UIImageView+PlayGIF.h/m
  *******************************************************/
 
 /*******************************************************
@@ -35,17 +35,16 @@
  *      - stopGIF       结束播放
  *      - isGIFPlaying  判断是否正在播放
  *  另外：
- *      不想用 category？请使用 YFGIFImageView.h/m
+ *      想用 category？请使用 UIImageView+PlayGIF.h/m
  *******************************************************/
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <ImageIO/ImageIO.h>
 
-@interface UIImageView (PlayGIF)
+@interface YFGIFImageView : UIImageView
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
-@property (nonatomic, strong) NSNumber          *index,*frameCount,*timestamp;
 - (void)startGIF;
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;
