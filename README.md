@@ -1,9 +1,5 @@
 UIImageView+PlayGIF
 ===================
-
-<img src="https://raw.githubusercontent.com/yfme/UIImageView-PlayGIF/master/screenshot.gif" width="200px" style="width: 200px;" />
-
-===================
 UIImageView category for playing GIF. Simple, high perfomence, low memory footprint.
 
  *  Dependencies:
@@ -17,7 +13,7 @@ UIImageView category for playing GIF. Simple, high perfomence, low memory footpr
   *      `- startGIF`
   *      `- stopGIF`
   *      `- isGIFPlaying`
- *  P.S.:
+ *  P.S.
   *      Don't like category? Use YFGIFImageView.h/m
 
 ===================
