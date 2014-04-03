@@ -44,7 +44,11 @@
     }
 }
 - (void)stopGIFView:(UIImageView *)view{
-    [_gifSourceRefMapTable removeObjectForKey:view];
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:view]);
+    if (ref) {
+        [_gifSourceRefMapTable removeObjectForKey:view];
+        CFRelease(ref);
+    }
     [_gifViewHashTable removeObject:view];
     if (_gifViewHashTable.count<1 && !_displayLink) {
         [self stopDisplayLink];
