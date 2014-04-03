@@ -10,8 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "YFGIFImageView.h"
 @interface YFGIFManager : NSObject
-@property (nonatomic, strong) CADisplayLink     *displayLink;
-@property (nonatomic, strong) NSMutableArray    *gifViewArray;
+@property (nonatomic, strong) CADisplayLink  *displayLink;
+@property (nonatomic, strong) NSHashTable    *gifViewHashTable;
 + (YFGIFManager *)shared;
 - (void)stopGIFView:(YFGIFImageView *)view;
 @end
@@ -27,12 +27,14 @@
 - (id)init{
 	self = [super init];
 	if (self) {
-		_gifViewArray = [[NSMutableArray alloc] init];
+		_gifViewHashTable = [NSHashTable hashTableWithOptions:NSHashTableWeakMemory];
 	}
 	return self;
 }
 - (void)play{
-    [_gifViewArray makeObjectsPerformSelector:@selector(play)];
+    for (YFGIFImageView *imageView in _gifViewHashTable) {
+        [imageView performSelector:@selector(play)];
+    }
 }
 - (void)stopDisplayLink{
     if (self.displayLink) {
@@ -41,8 +43,8 @@
     }
 }
 - (void)stopGIFView:(YFGIFImageView *)view{
-    [_gifViewArray removeObject:view];
-    if (_gifViewArray.count<1 && !_displayLink) {
+    [_gifViewHashTable removeObject:view];
+    if (_gifViewHashTable.count<1 && !_displayLink) {
         [self stopDisplayLink];
     }
 }
@@ -75,7 +77,7 @@
 }
 
 - (void)startGIF{
-    if ([[YFGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
+    if (![[YFGIFManager shared].gifViewHashTable containsObject:self]) {
         if ((self.gifData || self.gifPath)) {
             CGImageSourceRef gifSourceRef;
             if (self.gifData) {
@@ -86,7 +88,7 @@
             if (!gifSourceRef) {
                 return;
             }
-            [[YFGIFManager shared].gifViewArray addObject:self];
+            [[YFGIFManager shared].gifViewHashTable addObject:self];
             _gifSourceRef = gifSourceRef;
             _frameCount = CGImageSourceGetCount(gifSourceRef);
         }
