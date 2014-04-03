@@ -69,6 +69,10 @@
     }
     return self;
 }
+- (void)removeFromSuperview{
+    [super removeFromSuperview];
+    [self stopGIF];
+}
 
 - (void)startGIF{
     if ([[YFGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
