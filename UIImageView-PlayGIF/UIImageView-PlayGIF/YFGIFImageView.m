@@ -10,8 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "YFGIFImageView.h"
 @interface YFGIFManager : NSObject
-@property (nonatomic, strong) CADisplayLink     *displayLink;
-@property (nonatomic, strong) NSMutableArray    *gifViewArray;
+@property (nonatomic, strong) CADisplayLink  *displayLink;
+@property (nonatomic, strong) NSHashTable    *gifViewHashTable;
 + (YFGIFManager *)shared;
 - (void)stopGIFView:(YFGIFImageView *)view;
 @end
@@ -27,12 +27,14 @@
 - (id)init{
 	self = [super init];
 	if (self) {
-		_gifViewArray = [[NSMutableArray alloc] init];
+		_gifViewHashTable = [NSHashTable hashTableWithOptions:NSHashTableWeakMemory];
 	}
 	return self;
 }
 - (void)play{
-    [_gifViewArray makeObjectsPerformSelector:@selector(play)];
+    for (YFGIFImageView *imageView in _gifViewHashTable) {
+        [imageView performSelector:@selector(play)];
+    }
 }
 - (void)stopDisplayLink{
     if (self.displayLink) {
@@ -41,8 +43,8 @@
     }
 }
 - (void)stopGIFView:(YFGIFImageView *)view{
-    [_gifViewArray removeObject:view];
-    if (_gifViewArray.count<1 && !_displayLink) {
+    [_gifViewHashTable removeObject:view];
+    if (_gifViewHashTable.count<1 && !_displayLink) {
         [self stopDisplayLink];
     }
 }
@@ -61,36 +63,38 @@
 
 @implementation YFGIFImageView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
+- (void)removeFromSuperview{
+    [super removeFromSuperview];
+    [self stopGIF];
 }
 
 - (void)startGIF{
-    if ([[YFGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
-        if ((self.gifData || self.gifPath)) {
-            CGImageSourceRef gifSourceRef;
-            if (self.gifData) {
-                gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), NULL);
-            }else{
-                gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        if (![[YFGIFManager shared].gifViewHashTable containsObject:self]) {
+            if ((self.gifData || self.gifPath)) {
+                CGImageSourceRef gifSourceRef;
+                if (self.gifData) {
+                    gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), NULL);
+                }else{
+                    gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
+                }
+                if (!gifSourceRef) {
+                    return;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[YFGIFManager shared].gifViewHashTable addObject:self];
+                    _gifSourceRef = gifSourceRef;
+                    _frameCount = CGImageSourceGetCount(gifSourceRef);
+                });
             }
-            if (!gifSourceRef) {
-                return;
-            }
-            [[YFGIFManager shared].gifViewArray addObject:self];
-            _gifSourceRef = gifSourceRef;
-            _frameCount = CGImageSourceGetCount(gifSourceRef);
         }
-    }
-    if (![YFGIFManager shared].displayLink) {
-        [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
-        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    }
+        if (![YFGIFManager shared].displayLink) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
+                [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+            });
+        }
+    });
 }
 
 - (void)stopGIF{

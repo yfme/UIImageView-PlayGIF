@@ -10,8 +10,8 @@
 #import <Foundation/Foundation.h>
 @interface PlayGIFManager : NSObject
 @property (nonatomic, strong) CADisplayLink     *displayLink;
-@property (nonatomic, strong) NSMutableArray    *gifViewArray;
-@property (nonatomic, strong) NSMutableArray    *gifSourceRefArray;
+@property (nonatomic, strong) NSHashTable       *gifViewHashTable;
+@property (nonatomic, strong) NSMapTable        *gifSourceRefMapTable;
 + (PlayGIFManager *)shared;
 - (void)stopGIFView:(UIImageView *)view;
 @end
@@ -27,13 +27,15 @@
 - (id)init{
 	self = [super init];
 	if (self) {
-		_gifViewArray = [NSMutableArray array];
-        _gifSourceRefArray = [NSMutableArray array];
+		_gifViewHashTable = [NSHashTable hashTableWithOptions:NSHashTableWeakMemory];
+        _gifSourceRefMapTable = [NSMapTable mapTableWithKeyOptions:NSMapTableWeakMemory valueOptions:NSMapTableWeakMemory];
 	}
 	return self;
 }
 - (void)play{
-    [_gifViewArray makeObjectsPerformSelector:@selector(play)];
+    for (UIImageView *imageView in _gifViewHashTable) {
+        [imageView performSelector:@selector(play)];
+    }
 }
 - (void)stopDisplayLink{
     if (self.displayLink) {
@@ -42,9 +44,13 @@
     }
 }
 - (void)stopGIFView:(UIImageView *)view{
-    [_gifSourceRefArray removeObjectAtIndex:[_gifViewArray indexOfObject:view]];
-    [_gifViewArray removeObject:view];
-    if (_gifViewArray.count<1 && !_displayLink) {
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:view]);
+    if (ref) {
+        [_gifSourceRefMapTable removeObjectForKey:view];
+        CFRelease(ref);
+    }
+    [_gifViewHashTable removeObject:view];
+    if (_gifViewHashTable.count<1 && !_displayLink) {
         [self stopDisplayLink];
     }
 }
@@ -66,6 +72,30 @@ static const char * kTimestampKey       = "kTimestampKey";
 @dynamic index;
 @dynamic frameCount;
 @dynamic timestamp;
+
++(void)load{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class class = [self class];
+
+        SEL originalSelector = @selector(removeFromSuperview);
+        SEL swizzledSelector = @selector(yfgif_removeFromSuperview);
+
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
+
+        BOOL didAddMethod = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+        if (didAddMethod) {
+            class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+}
+-(void)yfgif_removeFromSuperview{
+    [self stopGIF];
+    [self yfgif_removeFromSuperview];
+}
 
 #pragma mark - ASSOCIATION
 
@@ -103,24 +133,30 @@ static const char * kTimestampKey       = "kTimestampKey";
 #pragma mark - ACTIONS
 
 - (void)startGIF{
-    if ([[PlayGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound && (self.gifData || self.gifPath)) {
-        CGImageSourceRef gifSourceRef;
-        if (self.gifData) {
-            gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), NULL);
-        }else{
-            gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        if (![[PlayGIFManager shared].gifViewHashTable containsObject:self] && (self.gifData || self.gifPath)) {
+            CGImageSourceRef gifSourceRef;
+            if (self.gifData) {
+                gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(self.gifData), NULL);
+            }else{
+                gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
+            }
+            if (!gifSourceRef) {
+                return;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[PlayGIFManager shared].gifViewHashTable addObject:self];
+                [[PlayGIFManager shared].gifSourceRefMapTable setObject:(__bridge id)(gifSourceRef) forKey:self];
+                self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
+            });
         }
-        if (!gifSourceRef) {
-            return;
+        if (![PlayGIFManager shared].displayLink) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
+                [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+            });
         }
-        [[PlayGIFManager shared].gifSourceRefArray addObject:(__bridge id)(gifSourceRef)];
-        [[PlayGIFManager shared].gifViewArray addObject:self];
-        self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
-    }
-    if (![PlayGIFManager shared].displayLink) {
-        [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
-        [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    }
+    });
 }
 
 - (void)stopGIF{
@@ -135,7 +171,7 @@ static const char * kTimestampKey       = "kTimestampKey";
     }
 	self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
     self.index = [NSNumber numberWithInteger:self.index.integerValue%self.frameCount.integerValue];
-    CGImageSourceRef ref = (__bridge CGImageSourceRef)([PlayGIFManager shared].gifSourceRefArray[[[PlayGIFManager shared].gifViewArray indexOfObject:self]]);
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
 	self.layer.contents = (__bridge id)(imageRef);
     CGImageRelease(imageRef);
@@ -143,15 +179,11 @@ static const char * kTimestampKey       = "kTimestampKey";
 }
 
 - (BOOL)isGIFPlaying{
-    if ([[PlayGIFManager shared].gifViewArray indexOfObject:self] == NSNotFound) {
-        return NO;
-    }else{
-        return YES;
-    }
+    return [[PlayGIFManager shared].gifViewHashTable containsObject:self];
 }
 
 - (float)frameDurationAtIndex:(size_t)index{
-    CGImageSourceRef ref = (__bridge CGImageSourceRef)([PlayGIFManager shared].gifSourceRefArray[[[PlayGIFManager shared].gifViewArray indexOfObject:self]]);
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
     CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(ref, index, NULL);
     NSDictionary *dict = (__bridge NSDictionary *)dictRef;
     NSDictionary *gifDict = (dict[(NSString *)kCGImagePropertyGIFDictionary]);
