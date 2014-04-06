@@ -150,13 +150,11 @@ static const char * kTimestampKey       = "kTimestampKey";
                 self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
             });
         }
-        if (![PlayGIFManager shared].displayLink) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
-                [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-            });
-        }
     });
+    if (![PlayGIFManager shared].displayLink) {
+        [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
+        [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    }
 }
 
 - (void)stopGIF{

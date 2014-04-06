@@ -88,13 +88,11 @@
                 });
             }
         }
-        if (![YFGIFManager shared].displayLink) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
-                [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-            });
-        }
     });
+    if (![YFGIFManager shared].displayLink) {
+        [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
+        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    }
 }
 
 - (void)stopGIF{
