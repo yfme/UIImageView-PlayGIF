@@ -26,6 +26,7 @@
 		75EEB01718E3C0CA006FC7A4 /* UIImageView_PlayGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EEB01618E3C0CA006FC7A4 /* UIImageView_PlayGIFTests.m */; };
 		75EEB02118E3C0E0006FC7A4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75EEB02018E3C0E0006FC7A4 /* QuartzCore.framework */; };
 		75EEB02318E3C0E4006FC7A4 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75EEB02218E3C0E4006FC7A4 /* ImageIO.framework */; };
+		75F09DAB18F23F7200239C6E /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75F09DAA18F23F7200239C6E /* TableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		75EEB01618E3C0CA006FC7A4 /* UIImageView_PlayGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIImageView_PlayGIFTests.m; sourceTree = "<group>"; };
 		75EEB02018E3C0E0006FC7A4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		75EEB02218E3C0E4006FC7A4 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		75F09DA918F23F7200239C6E /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		75F09DAA18F23F7200239C6E /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +148,8 @@
 				75EEAFFD18E3C0CA006FC7A4 /* Main.storyboard */,
 				75EEB00018E3C0CA006FC7A4 /* ViewController.h */,
 				75EEB00118E3C0CA006FC7A4 /* ViewController.m */,
+				75F09DA918F23F7200239C6E /* TableViewController.h */,
+				75F09DAA18F23F7200239C6E /* TableViewController.m */,
 				75C8B80118E3C186000B998A /* car.gif */,
 				75EEB00318E3C0CA006FC7A4 /* Images.xcassets */,
 				75EEAFF218E3C0CA006FC7A4 /* Supporting Files */,
@@ -280,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75EEB00218E3C0CA006FC7A4 /* ViewController.m in Sources */,
+				75F09DAB18F23F7200239C6E /* TableViewController.m in Sources */,
 				75EEAFFC18E3C0CA006FC7A4 /* AppDelegate.m in Sources */,
 				75EEAFF818E3C0CA006FC7A4 /* main.m in Sources */,
 				75C8B7FF18E3C128000B998A /* UIImageView+PlayGIF.m in Sources */,
