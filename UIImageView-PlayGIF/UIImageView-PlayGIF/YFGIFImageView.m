@@ -68,7 +68,13 @@
     [self stopGIF];
 }
 
-- (void)startGIF{
+- (void)startGIF
+{
+    [self startGIFwithRunLoopMode:NSDefaultRunLoopMode];
+}
+
+- (void)startGIFwithRunLoopMode:(NSString * const)runLoopMode
+{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         if (![[YFGIFManager shared].gifViewHashTable containsObject:self]) {
             if ((self.gifData || self.gifPath)) {
@@ -91,7 +97,7 @@
     });
     if (![YFGIFManager shared].displayLink) {
         [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
-        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
     }
 }
 

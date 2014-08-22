@@ -46,6 +46,7 @@
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
 - (void)startGIF;
+- (void)startGIFwithRunLoopMode:(NSString * const)runLoopMode;
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;
 @end
