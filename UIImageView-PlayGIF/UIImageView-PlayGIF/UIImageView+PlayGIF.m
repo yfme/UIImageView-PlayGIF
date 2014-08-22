@@ -132,7 +132,13 @@ static const char * kTimestampKey       = "kTimestampKey";
 
 #pragma mark - ACTIONS
 
-- (void)startGIF{
+- (void)startGIF
+{
+    [self startGIFwithRunLoopMode:NSDefaultRunLoopMode];
+}
+
+- (void)startGIFwithRunLoopMode:(NSString * const)runLoopMode
+{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         if (![[PlayGIFManager shared].gifViewHashTable containsObject:self] && (self.gifData || self.gifPath)) {
             CGImageSourceRef gifSourceRef;
@@ -153,7 +159,7 @@ static const char * kTimestampKey       = "kTimestampKey";
     });
     if (![PlayGIFManager shared].displayLink) {
         [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
-        [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
     }
 }
 
