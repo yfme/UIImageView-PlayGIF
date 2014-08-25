@@ -47,7 +47,7 @@
 @property (nonatomic, strong) NSData            *gifData;
 @property (nonatomic, strong) NSNumber          *index,*frameCount,*timestamp;
 - (void)startGIF;
-- (void)startGIFwithRunLoopMode:(NSString * const)runLoopMode;
+- (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode;
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;
 @end

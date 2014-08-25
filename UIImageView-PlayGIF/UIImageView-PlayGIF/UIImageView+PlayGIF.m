@@ -134,10 +134,10 @@ static const char * kTimestampKey       = "kTimestampKey";
 
 - (void)startGIF
 {
-    [self startGIFwithRunLoopMode:NSDefaultRunLoopMode];
+    [self startGIFWithRunLoopMode:NSDefaultRunLoopMode];
 }
 
-- (void)startGIFwithRunLoopMode:(NSString * const)runLoopMode
+- (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         if (![[PlayGIFManager shared].gifViewHashTable containsObject:self] && (self.gifData || self.gifPath)) {
