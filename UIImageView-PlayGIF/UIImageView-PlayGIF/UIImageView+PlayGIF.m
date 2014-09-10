@@ -6,8 +6,15 @@
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
 //
 
-/**********************************************************************/
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <ImageIO/ImageIO.h>
+#import <objc/runtime.h>
+#import "UIImageView+PlayGIF.h"
+
+/**********************************************************************/
+
 @interface PlayGIFManager : NSObject
 @property (nonatomic, strong) CADisplayLink     *displayLink;
 @property (nonatomic, strong) NSHashTable       *gifViewHashTable;
@@ -55,10 +62,8 @@
     }
 }
 @end
-/**********************************************************************/
 
-#import "UIImageView+PlayGIF.h"
-#import <objc/runtime.h>
+/**********************************************************************/
 
 static const char * kGifPathKey         = "kGifPathKey";
 static const char * kGifDataKey         = "kGifDataKey";

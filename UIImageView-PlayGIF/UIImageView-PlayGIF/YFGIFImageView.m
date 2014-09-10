@@ -6,9 +6,14 @@
 //  Copyright (c) 2014年 yangfei.me. All rights reserved.
 //
 
-/**********************************************************************/
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <ImageIO/ImageIO.h>
 #import "YFGIFImageView.h"
+
+/**********************************************************************/
+
 @interface YFGIFManager : NSObject
 @property (nonatomic, strong) CADisplayLink  *displayLink;
 @property (nonatomic, strong) NSHashTable    *gifViewHashTable;
@@ -49,9 +54,8 @@
     }
 }
 @end
-/**********************************************************************/
 
-#import "YFGIFImageView.h"
+/**********************************************************************/
 
 @interface YFGIFImageView(){
     size_t              _index;
