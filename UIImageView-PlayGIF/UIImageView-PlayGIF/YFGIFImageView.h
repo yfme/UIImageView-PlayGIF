@@ -38,10 +38,6 @@
  *      想用 category？请使用 UIImageView+PlayGIF.h/m
  *******************************************************/
 
-#import <UIKit/UIKit.h>
-#import <QuartzCore/QuartzCore.h>
-#import <ImageIO/ImageIO.h>
-
 @interface YFGIFImageView : UIImageView
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
