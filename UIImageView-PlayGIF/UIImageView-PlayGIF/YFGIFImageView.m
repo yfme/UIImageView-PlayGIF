@@ -67,6 +67,14 @@
 
 @implementation YFGIFImageView
 
+- (id)init{
+    self = [super init];
+    if(self){
+        _gifPixelSize = CGSizeZero;
+    }
+    return self;
+}
+
 - (void)removeFromSuperview{
     [super removeFromSuperview];
     [self stopGIF];
@@ -95,6 +103,7 @@
                     [[YFGIFManager shared].gifViewHashTable addObject:self];
                     _gifSourceRef = gifSourceRef;
                     _frameCount = CGImageSourceGetCount(gifSourceRef);
+                    _gifPixelSize = [self GIFDimensionalSize];
                 });
             }
         }
@@ -145,6 +154,24 @@
     }else{
         return 1/24.0;
     }
+}
+
+- (CGSize)GIFDimensionalSize{
+    if(!_gifSourceRef){
+        return CGSizeZero;
+    }
+    
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(_gifSourceRef, 0, NULL);
+    NSDictionary *dict = (__bridge NSDictionary *)dictRef;
+    
+    NSNumber* pixelWidth = (dict[(NSString*)kCGImagePropertyPixelWidth]);
+    NSNumber* pixelHeight = (dict[(NSString*)kCGImagePropertyPixelHeight]);
+    
+    CGSize sizeAsInProperties = CGSizeMake([pixelWidth floatValue], [pixelHeight floatValue]);
+    
+    CFRelease(dictRef);
+    
+    return sizeAsInProperties;
 }
 
 @end

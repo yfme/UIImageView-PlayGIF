@@ -70,6 +70,7 @@ static const char * kGifDataKey         = "kGifDataKey";
 static const char * kIndexKey           = "kIndexKey";
 static const char * kFrameCountKey      = "kFrameCountKey";
 static const char * kTimestampKey       = "kTimestampKey";
+static const char * kPxSize             = "kPxSize";
 
 @implementation UIImageView (PlayGIF)
 @dynamic gifPath;
@@ -159,6 +160,8 @@ static const char * kTimestampKey       = "kTimestampKey";
                 [[PlayGIFManager shared].gifViewHashTable addObject:self];
                 [[PlayGIFManager shared].gifSourceRefMapTable setObject:(__bridge id)(gifSourceRef) forKey:self];
                 self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
+                CGSize pxSize = [self GIFDimensionalSize];
+                objc_setAssociatedObject(self, kPxSize, [NSValue valueWithCGSize:pxSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             });
         }
     });
@@ -189,6 +192,29 @@ static const char * kTimestampKey       = "kTimestampKey";
 
 - (BOOL)isGIFPlaying{
     return [[PlayGIFManager shared].gifViewHashTable containsObject:self];
+}
+
+- (CGSize) gifPixelSize{
+    return [objc_getAssociatedObject(self, kPxSize) CGSizeValue];
+}
+
+- (CGSize)GIFDimensionalSize{
+    if(![[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]){
+        return CGSizeZero;
+    }
+    
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(ref, 0, NULL);
+    NSDictionary *dict = (__bridge NSDictionary *)dictRef;
+    
+    NSNumber* pixelWidth = (dict[(NSString*)kCGImagePropertyPixelWidth]);
+    NSNumber* pixelHeight = (dict[(NSString*)kCGImagePropertyPixelHeight]);
+    
+    CGSize sizeAsInProperties = CGSizeMake([pixelWidth floatValue], [pixelHeight floatValue]);
+    
+    CFRelease(dictRef);
+    
+    return sizeAsInProperties;
 }
 
 - (float)frameDurationAtIndex:(size_t)index{

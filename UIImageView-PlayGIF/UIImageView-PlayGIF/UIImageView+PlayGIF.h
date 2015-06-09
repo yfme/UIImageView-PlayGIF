@@ -46,4 +46,5 @@
 - (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode;
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;
+- (CGSize) gifPixelSize;
 @end

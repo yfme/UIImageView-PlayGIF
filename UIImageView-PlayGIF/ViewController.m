@@ -28,6 +28,7 @@
     }else{
         [gifView startGIF];
     }
+    NSLog(@"%@",NSStringFromCGSize([gifView gifPixelSize]));
 }
 
 - (void)viewDidLoad
