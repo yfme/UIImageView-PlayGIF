@@ -47,4 +47,6 @@
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;
 - (CGSize) gifPixelSize;
+- (CGImageRef) gifCreateImageForFrameAtIndex:(NSInteger)index;
+- (float)gifFrameDurationAtIndex:(size_t)index;
 @end

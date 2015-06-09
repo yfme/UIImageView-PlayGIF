@@ -198,6 +198,19 @@ static const char * kPxSize             = "kPxSize";
     return [objc_getAssociatedObject(self, kPxSize) CGSizeValue];
 }
 
+- (CGImageRef) gifCreateImageForFrameAtIndex:(NSInteger)index{
+    if(![self isGIFPlaying]){
+        return nil;
+    }
+    
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
+    return CGImageSourceCreateImageAtIndex(ref, index, NULL);
+}
+
+- (float)gifFrameDurationAtIndex:(size_t)index{
+    return [self frameDurationAtIndex:index];
+}
+
 - (CGSize)GIFDimensionalSize{
     if(![[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]){
         return CGSizeZero;
