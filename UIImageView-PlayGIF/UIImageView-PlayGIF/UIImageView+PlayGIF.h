@@ -38,6 +38,8 @@
  *      不想用 category？请使用 YFGIFImageView.h/m
  *******************************************************/
 
+#import <UIKit/UIImageView.h>
+
 @interface UIImageView (PlayGIF)
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
