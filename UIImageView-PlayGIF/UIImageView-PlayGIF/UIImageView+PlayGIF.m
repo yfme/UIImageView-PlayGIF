@@ -247,4 +247,24 @@ static const char * kPxSize             = "kPxSize";
     }
 }
 
+-(NSArray*)frames{
+    
+    NSMutableArray* images = [NSMutableArray new];
+    
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
+    
+    if(!ref){
+        return NULL;
+    }
+    
+    NSInteger cnt = CGImageSourceGetCount(ref);
+    for(NSInteger i = 0; i < cnt; i++){
+        CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, i, NULL);
+        [images addObject:[UIImage imageWithCGImage:imageRef]];
+        CGImageRelease(imageRef);
+    }
+    
+    return images;
+}
+
 @end

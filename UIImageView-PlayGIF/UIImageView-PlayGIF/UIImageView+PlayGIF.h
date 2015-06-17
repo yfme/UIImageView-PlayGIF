@@ -49,4 +49,5 @@
 - (CGSize) gifPixelSize;
 - (CGImageRef) gifCreateImageForFrameAtIndex:(NSInteger)index;
 - (float)gifFrameDurationAtIndex:(size_t)index;
+- (NSArray*)frames;
 @end
