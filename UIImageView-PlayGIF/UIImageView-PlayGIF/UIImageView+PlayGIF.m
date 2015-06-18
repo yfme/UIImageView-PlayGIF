@@ -181,8 +181,6 @@ static const char * kPxSize             = "kPxSize";
     if (self.timestamp.floatValue < nextFrameDuration) {
         self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
         return;
-    }else{
-
     }
     NSLog(@"%s",__func__);
     self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
