@@ -177,16 +177,19 @@ static const char * kPxSize             = "kPxSize";
 
 - (void)play{
     float nextFrameDuration = [self frameDurationAtIndex:MIN(self.index.integerValue+1, self.frameCount.integerValue-1)];
+    NSLog(@"%s with timestamp: %lf",__func__,self.timestamp.floatValue);
     if (self.timestamp.floatValue < nextFrameDuration) {
         self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
         return;
+    }else{
+
     }
-	self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
+    NSLog(@"%s",__func__);
+    self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
     self.index = [NSNumber numberWithInteger:self.index.integerValue%self.frameCount.integerValue];
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
-    NSLog(@"%s",__func__);
-	self.layer.contents = (__bridge id)(imageRef);
+    self.layer.contents = (__bridge id)(imageRef);
     CGImageRelease(imageRef);
     self.timestamp = [NSNumber numberWithFloat:0];
 }
