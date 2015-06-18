@@ -196,7 +196,7 @@ static const char * kGifLength          = "kGifLength";
     NSLog(@"%s with timestamp: %lf + %lf",__func__,self.timestamp.floatValue,[PlayGIFManager shared].displayLink.duration);
     self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
     
-    float loopT = ((int)[self.timestamp floatValue] * 1000) % ((int)[[self gifLength] floatValue] * 1000) / 1000;
+    float loopT = fmodf([self.timestamp floatValue], [[self gifLength] floatValue]);
     
     self.index = @([self indexForDuration:loopT]);
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
