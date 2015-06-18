@@ -42,6 +42,7 @@
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
 @property (nonatomic, strong) NSNumber          *index,*frameCount,*timestamp;
+@property (nonatomic, strong) NSDictionary      *indexDurations;
 - (void)startGIF;
 - (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode;
 - (void)stopGIF;

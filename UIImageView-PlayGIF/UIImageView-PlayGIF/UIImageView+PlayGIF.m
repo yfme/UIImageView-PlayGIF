@@ -72,6 +72,7 @@ static const char * kFrameCountKey      = "kFrameCountKey";
 static const char * kTimestampKey       = "kTimestampKey";
 static const char * kPxSize             = "kPxSize";
 static const char * kGifLength          = "kGifLength";
+static const char * kIndexDurationKey   = "kIndexDurationKey";
 
 @implementation UIImageView (PlayGIF)
 @dynamic gifPath;
@@ -79,6 +80,7 @@ static const char * kGifLength          = "kGifLength";
 @dynamic index;
 @dynamic frameCount;
 @dynamic timestamp;
+@dynamic indexDurations;
 
 +(void)load{
     static dispatch_once_t onceToken;
@@ -136,6 +138,12 @@ static const char * kGifLength          = "kGifLength";
 - (void)setTimestamp:(NSNumber *)timestamp{
     objc_setAssociatedObject(self, kTimestampKey, timestamp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+-(NSDictionary*)indexDurations{
+    return objc_getAssociatedObject(self, kIndexDurationKey);
+}
+-(void)setIndexDurations:(NSDictionary*)durations{
+    objc_setAssociatedObject(self, kIndexDurationKey, durations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 #pragma mark - ACTIONS
 
@@ -164,23 +172,26 @@ static const char * kGifLength          = "kGifLength";
                 self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
                 CGSize pxSize = [self GIFDimensionalSize];
                 objc_setAssociatedObject(self, kPxSize, [NSValue valueWithCGSize:pxSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-                objc_setAssociatedObject(self, kGifLength, [self calculateGifLength], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                objc_setAssociatedObject(self, kGifLength, [self buildIndexAndReturnLength], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             });
         }
     });
     if (![PlayGIFManager shared].displayLink) {
         [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
-        [PlayGIFManager shared].displayLink.frameInterval = 2;
         [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
     }
 }
 
--(NSNumber*)calculateGifLength{
+-(NSNumber*)buildIndexAndReturnLength{
     
+    NSMutableDictionary* d = [[NSMutableDictionary alloc] initWithCapacity:[self.frameCount integerValue]];
     float l = 0;
     for(int i = 0; i < [self.frameCount intValue]; i++){
-        l += [self frameDurationAtIndex:i];
+        float durationAtIndex = [self frameDurationAtIndex:i];
+        [d setObject:@(durationAtIndex) forKey:@(i)];
+        l += durationAtIndex;
     }
+    self.indexDurations = d;
     return @(l);
 }
 
@@ -196,7 +207,7 @@ static const char * kGifLength          = "kGifLength";
     NSLog(@"%s with timestamp: %lf + %lf",__func__,self.timestamp.floatValue,[PlayGIFManager shared].displayLink.duration);
     self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
     
-    float loopT = ((int)[self.timestamp floatValue] * 1000) % ((int)[[self gifLength] floatValue] * 1000) / 1000;
+    float loopT = fmodf([self.timestamp floatValue], [[self gifLength] floatValue]);
     
     self.index = @([self indexForDuration:loopT]);
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
@@ -210,8 +221,8 @@ static const char * kGifLength          = "kGifLength";
     float sum = 0;
     
     for(int i = 0; i < self.frameCount.intValue; i++){
-        float singleFrameDuration = [self frameDurationAtIndex:i];
-        sum += singleFrameDuration;
+        NSNumber* singleFrameDuration = [self.indexDurations objectForKey:@(i)];
+        sum += [singleFrameDuration floatValue];
         
         if(sum >= duration) {
             return i;
