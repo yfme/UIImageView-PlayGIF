@@ -177,7 +177,7 @@ static const char * kPxSize             = "kPxSize";
 
 - (void)play{
     float nextFrameDuration = [self frameDurationAtIndex:MIN(self.index.integerValue+1, self.frameCount.integerValue-1)];
-    NSLog(@"%s with timestamp: %lf",__func__,self.timestamp.floatValue);
+    NSLog(@"%s with timestamp: %lf + %lf",__func__,self.timestamp.floatValue,[PlayGIFManager shared].displayLink.duration);
     if (self.timestamp.floatValue < nextFrameDuration) {
         self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
         return;
@@ -189,7 +189,7 @@ static const char * kPxSize             = "kPxSize";
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
     self.layer.contents = (__bridge id)(imageRef);
     CGImageRelease(imageRef);
-    self.timestamp = [NSNumber numberWithFloat:0];
+    self.timestamp = [NSNumber numberWithFloat:[PlayGIFManager shared].displayLink.duration];
 }
 
 - (BOOL)isGIFPlaying{
