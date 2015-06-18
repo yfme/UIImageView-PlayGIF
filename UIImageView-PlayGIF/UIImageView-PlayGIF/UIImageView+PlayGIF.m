@@ -71,6 +71,7 @@ static const char * kIndexKey           = "kIndexKey";
 static const char * kFrameCountKey      = "kFrameCountKey";
 static const char * kTimestampKey       = "kTimestampKey";
 static const char * kPxSize             = "kPxSize";
+static const char * kGifLength          = "kGifLength";
 
 @implementation UIImageView (PlayGIF)
 @dynamic gifPath;
@@ -140,6 +141,7 @@ static const char * kPxSize             = "kPxSize";
 
 - (void)startGIF
 {
+    self.timestamp = 0;
     [self startGIFWithRunLoopMode:NSDefaultRunLoopMode];
 }
 
@@ -162,13 +164,28 @@ static const char * kPxSize             = "kPxSize";
                 self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
                 CGSize pxSize = [self GIFDimensionalSize];
                 objc_setAssociatedObject(self, kPxSize, [NSValue valueWithCGSize:pxSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                objc_setAssociatedObject(self, kGifLength, [self calculateGifLength], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             });
         }
     });
     if (![PlayGIFManager shared].displayLink) {
         [PlayGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[PlayGIFManager shared] selector:@selector(play)];
+        [PlayGIFManager shared].displayLink.frameInterval = 2;
         [[PlayGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
     }
+}
+
+-(NSNumber*)calculateGifLength{
+    
+    float l = 0;
+    for(int i = 0; i < [self.frameCount intValue]; i++){
+        l += [self frameDurationAtIndex:i];
+    }
+    return @(l);
+}
+
+-(NSNumber*)gifLength{
+    return objc_getAssociatedObject(self, kGifLength);
 }
 
 - (void)stopGIF{
@@ -176,20 +193,29 @@ static const char * kPxSize             = "kPxSize";
 }
 
 - (void)play{
-    float nextFrameDuration = [self frameDurationAtIndex:MIN(self.index.integerValue+1, self.frameCount.integerValue-1)];
     NSLog(@"%s with timestamp: %lf + %lf",__func__,self.timestamp.floatValue,[PlayGIFManager shared].displayLink.duration);
-    if (self.timestamp.floatValue < nextFrameDuration) {
-        self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
-        return;
-    }
-    NSLog(@"%s",__func__);
-    self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
-    self.index = [NSNumber numberWithInteger:self.index.integerValue%self.frameCount.integerValue];
+    self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
+    self.index = @([self indexForDuration:[self.timestamp floatValue]]);
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
     self.layer.contents = (__bridge id)(imageRef);
     CGImageRelease(imageRef);
-    self.timestamp = [NSNumber numberWithFloat:[PlayGIFManager shared].displayLink.duration];
+}
+
+- (int) indexForDuration:(float)duration{
+    
+    float sum = 0;
+    
+    for(int i = 0; i < self.frameCount.intValue; i++){
+        float singleFrameDuration = [self frameDurationAtIndex:i];
+        sum += singleFrameDuration;
+        
+        if(sum >= duration) {
+            return i;
+        }
+    }
+    
+    return [self.frameCount intValue] - 1;
 }
 
 - (BOOL)isGIFPlaying{
