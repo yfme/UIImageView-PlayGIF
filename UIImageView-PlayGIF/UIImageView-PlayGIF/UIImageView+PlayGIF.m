@@ -185,6 +185,7 @@ static const char * kPxSize             = "kPxSize";
     self.index = [NSNumber numberWithInteger:self.index.integerValue%self.frameCount.integerValue];
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
+    NSLog(@"%s",__func__);
 	self.layer.contents = (__bridge id)(imageRef);
     CGImageRelease(imageRef);
     self.timestamp = [NSNumber numberWithFloat:0];
