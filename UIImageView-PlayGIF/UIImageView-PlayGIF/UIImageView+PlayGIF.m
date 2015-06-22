@@ -204,11 +204,12 @@ static const char * kIndexDurationKey   = "kIndexDurationKey";
 }
 
 - (void)play{
-    NSLog(@"%s with timestamp: %lf + %lf",__func__,self.timestamp.floatValue,[PlayGIFManager shared].displayLink.duration);
     self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
     
     float loopT = fmodf([self.timestamp floatValue], [[self gifLength] floatValue]);
-    
+#ifdef DEBUG
+    NSLog(@"%s with timestamp: %lf + %lf -> %lf",__func__,self.timestamp.floatValue,[[self gifLength] floatValue],loopT);
+#endif
     self.index = @([self indexForDuration:loopT]);
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
