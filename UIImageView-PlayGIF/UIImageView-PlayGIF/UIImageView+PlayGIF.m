@@ -70,6 +70,9 @@ static const char * kGifDataKey         = "kGifDataKey";
 static const char * kIndexKey           = "kIndexKey";
 static const char * kFrameCountKey      = "kFrameCountKey";
 static const char * kTimestampKey       = "kTimestampKey";
+static const char * kPxSize             = "kPxSize";
+static const char * kGifLength          = "kGifLength";
+static const char * kIndexDurationKey   = "kIndexDurationKey";
 
 @implementation UIImageView (PlayGIF)
 @dynamic gifPath;
@@ -77,6 +80,7 @@ static const char * kTimestampKey       = "kTimestampKey";
 @dynamic index;
 @dynamic frameCount;
 @dynamic timestamp;
+@dynamic indexDurations;
 
 +(void)load{
     static dispatch_once_t onceToken;
@@ -134,11 +138,18 @@ static const char * kTimestampKey       = "kTimestampKey";
 - (void)setTimestamp:(NSNumber *)timestamp{
     objc_setAssociatedObject(self, kTimestampKey, timestamp, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+-(NSDictionary*)indexDurations{
+    return objc_getAssociatedObject(self, kIndexDurationKey);
+}
+-(void)setIndexDurations:(NSDictionary*)durations{
+    objc_setAssociatedObject(self, kIndexDurationKey, durations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 #pragma mark - ACTIONS
 
 - (void)startGIF
 {
+    self.timestamp = 0;
     [self startGIFWithRunLoopMode:NSDefaultRunLoopMode];
 }
 
@@ -159,6 +170,9 @@ static const char * kTimestampKey       = "kTimestampKey";
                 [[PlayGIFManager shared].gifViewHashTable addObject:self];
                 [[PlayGIFManager shared].gifSourceRefMapTable setObject:(__bridge id)(gifSourceRef) forKey:self];
                 self.frameCount = [NSNumber numberWithInteger:CGImageSourceGetCount(gifSourceRef)];
+                CGSize pxSize = [self GIFDimensionalSize];
+                objc_setAssociatedObject(self, kPxSize, [NSValue valueWithCGSize:pxSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                objc_setAssociatedObject(self, kGifLength, [self buildIndexAndReturnLength], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             });
         }
     });
@@ -168,27 +182,92 @@ static const char * kTimestampKey       = "kTimestampKey";
     }
 }
 
+-(NSNumber*)buildIndexAndReturnLength{
+    
+    NSMutableDictionary* d = [[NSMutableDictionary alloc] initWithCapacity:[self.frameCount integerValue]];
+    float l = 0;
+    for(int i = 0; i < [self.frameCount intValue]; i++){
+        float durationAtIndex = [self frameDurationAtIndex:i];
+        [d setObject:@(durationAtIndex) forKey:@(i)];
+        l += durationAtIndex;
+    }
+    self.indexDurations = d;
+    return @(l);
+}
+
+-(NSNumber*)gifLength{
+    return objc_getAssociatedObject(self, kGifLength);
+}
+
 - (void)stopGIF{
     [[PlayGIFManager shared] stopGIFView:self];
 }
 
 - (void)play{
-    float nextFrameDuration = [self frameDurationAtIndex:MIN(self.index.integerValue+1, self.frameCount.integerValue-1)];
-    if (self.timestamp.floatValue < nextFrameDuration) {
-        self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
-        return;
-    }
-	self.index = [NSNumber numberWithInteger:self.index.integerValue+1];
-    self.index = [NSNumber numberWithInteger:self.index.integerValue%self.frameCount.integerValue];
+    self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
+    
+    float loopT = fmodf([self.timestamp floatValue], [[self gifLength] floatValue]);
+    self.index = @([self indexForDuration:loopT]);
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
-	self.layer.contents = (__bridge id)(imageRef);
+    self.layer.contents = (__bridge id)(imageRef);
     CGImageRelease(imageRef);
-    self.timestamp = [NSNumber numberWithFloat:0];
+}
+
+- (int) indexForDuration:(float)duration{
+    
+    float sum = 0;
+    
+    for(int i = 0; i < self.frameCount.intValue; i++){
+        NSNumber* singleFrameDuration = [self.indexDurations objectForKey:@(i)];
+        sum += [singleFrameDuration floatValue];
+        
+        if(sum >= duration) {
+            return i;
+        }
+    }
+    
+    return [self.frameCount intValue] - 1;
 }
 
 - (BOOL)isGIFPlaying{
     return [[PlayGIFManager shared].gifViewHashTable containsObject:self];
+}
+
+- (CGSize) gifPixelSize{
+    return [objc_getAssociatedObject(self, kPxSize) CGSizeValue];
+}
+
+- (CGImageRef) gifCreateImageForFrameAtIndex:(NSInteger)index{
+    if(![self isGIFPlaying]){
+        return nil;
+    }
+    
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
+    return CGImageSourceCreateImageAtIndex(ref, index, NULL);
+}
+
+- (float)gifFrameDurationAtIndex:(size_t)index{
+    return [self frameDurationAtIndex:index];
+}
+
+- (CGSize)GIFDimensionalSize{
+    if(![[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]){
+        return CGSizeZero;
+    }
+    
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(ref, 0, NULL);
+    NSDictionary *dict = (__bridge NSDictionary *)dictRef;
+    
+    NSNumber* pixelWidth = (dict[(NSString*)kCGImagePropertyPixelWidth]);
+    NSNumber* pixelHeight = (dict[(NSString*)kCGImagePropertyPixelHeight]);
+    
+    CGSize sizeAsInProperties = CGSizeMake([pixelWidth floatValue], [pixelHeight floatValue]);
+    
+    CFRelease(dictRef);
+    
+    return sizeAsInProperties;
 }
 
 - (float)frameDurationAtIndex:(size_t)index{
@@ -206,6 +285,26 @@ static const char * kTimestampKey       = "kTimestampKey";
     }else{
         return 1/24.0;
     }
+}
+
+-(NSArray*)frames{
+    
+    NSMutableArray* images = [NSMutableArray new];
+    
+    CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
+    
+    if(!ref){
+        return NULL;
+    }
+    
+    NSInteger cnt = CGImageSourceGetCount(ref);
+    for(NSInteger i = 0; i < cnt; i++){
+        CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, i, NULL);
+        [images addObject:[UIImage imageWithCGImage:imageRef]];
+        CGImageRelease(imageRef);
+    }
+    
+    return images;
 }
 
 @end
