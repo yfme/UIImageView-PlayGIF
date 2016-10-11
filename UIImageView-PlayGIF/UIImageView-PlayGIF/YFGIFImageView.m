@@ -88,6 +88,9 @@
 #pragma mark - Gif methods
 - (void)startGIF
 {
+    _gifPixelSize = CGSizeZero;
+    // 保证完全结束播放后，再开始新的播放
+    // Be sure to start playback after finished playing.
     [self.renderQueue addOperationWithBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [self startGIFWithRunLoopMode:NSDefaultRunLoopMode andImageDidLoad:nil];
@@ -106,20 +109,19 @@
                 }else{
                     gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
                 }
-                CGImageRef ref = CGImageSourceCreateImageAtIndex(gifSourceRef, 0, NULL);
+                CGSize pixcelSize = [self GIFDimensionalSize:gifSourceRef];
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    _gifPixelSize = pixcelSize;
+                    CGFloat scale = [UIScreen mainScreen].scale;
+                    CGSize imgSize = CGSizeMake(pixcelSize.width/scale, pixcelSize.height/scale);
                     // 获取图片尺寸
-                    if (!gifSourceRef
-                        || !ref) {
-                        CFRelease(gifSourceRef);
-                        if (didLoad) didLoad(self.frame.size);
+                    if (!gifSourceRef) {
+                        if (didLoad) didLoad(imgSize);
                         return;
                     }
                     if (didLoad) {
-                        CGFloat scale = [UIScreen mainScreen].scale;
-                        didLoad(CGSizeMake(CGImageGetWidth(ref)/scale, CGImageGetHeight(ref)/scale));
+                        didLoad(imgSize);
                     }
-                    CFRelease(ref);
                     [[YFGIFManager shared].gifViewHashTable addObject:self];
                     _gifSourceRef = gifSourceRef;
                     _frameCount = CGImageSourceGetCount(gifSourceRef);
@@ -205,4 +207,21 @@
     }
 }
 
+- (CGSize)GIFDimensionalSize:(CGImageSourceRef)imgSourceRef{
+    if(!imgSourceRef){
+        return CGSizeZero;
+    }
+    
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(imgSourceRef, 0, NULL);
+    NSDictionary *dict = (__bridge NSDictionary *)dictRef;
+
+    NSNumber* pixelWidth = (dict[(NSString*)kCGImagePropertyPixelWidth]);
+    NSNumber* pixelHeight = (dict[(NSString*)kCGImagePropertyPixelHeight]);
+
+    CGSize sizeAsInProperties = CGSizeMake([pixelWidth floatValue], [pixelHeight floatValue]);
+
+    CFRelease(dictRef);
+    
+    return sizeAsInProperties;
+}
 @end

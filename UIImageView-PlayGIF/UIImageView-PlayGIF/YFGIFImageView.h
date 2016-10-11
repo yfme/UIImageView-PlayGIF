@@ -47,6 +47,7 @@
 @interface YFGIFImageView : UIImageView
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
+@property (nonatomic, assign, readonly) CGSize  gifPixelSize;
 @property (nonatomic, assign) BOOL              unRepeat;
 @property (copy, nonatomic) void(^playingComplete)();
 - (void)startGIF;
