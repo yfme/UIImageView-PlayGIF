@@ -111,16 +111,13 @@
                 }
                 CGSize pixcelSize = [self GIFDimensionalSize:gifSourceRef];
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    // 获取图片尺寸
                     _gifPixelSize = pixcelSize;
                     CGFloat scale = [UIScreen mainScreen].scale;
                     CGSize imgSize = CGSizeMake(pixcelSize.width/scale, pixcelSize.height/scale);
-                    // 获取图片尺寸
+                    if (didLoad) didLoad(imgSize);
                     if (!gifSourceRef) {
-                        if (didLoad) didLoad(imgSize);
                         return;
-                    }
-                    if (didLoad) {
-                        didLoad(imgSize);
                     }
                     [[YFGIFManager shared].gifViewHashTable addObject:self];
                     _gifSourceRef = gifSourceRef;
