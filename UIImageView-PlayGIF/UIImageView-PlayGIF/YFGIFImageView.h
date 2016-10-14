@@ -14,6 +14,9 @@
  *      Pass value to one of them:
  *      - gifData NSData from a GIF
  *      - gifPath local path of a GIF
+ 
+ *      - unRepeat              Unrepeat playing.
+ *      - playingComplete       Invoked after playing done.
  *  Usage:
  *      - startGIF
  *      - stopGIF
@@ -30,6 +33,9 @@
  *      以下传参2选1：
  *      - gifData       GIF图片的NSData
  *      - gifPath       GIF图片的本地路径
+ 
+ *      - unRepeat              不重复播放
+ *      - playingComplete       播放完成时调用，如果循环播放每次播放完都会调用
  *  调用:
  *      - startGIF      开始播放
  *      - stopGIF       结束播放
@@ -38,14 +44,14 @@
  *      想用 category？请使用 UIImageView+PlayGIF.h/m
  *******************************************************/
 
-#import <UIKit/UIImageView.h>
-
 @interface YFGIFImageView : UIImageView
 @property (nonatomic, strong) NSString          *gifPath;
 @property (nonatomic, strong) NSData            *gifData;
 @property (nonatomic, assign, readonly) CGSize  gifPixelSize;
+@property (nonatomic, assign) BOOL              unRepeat;
+@property (copy, nonatomic) void(^playingComplete)();
 - (void)startGIF;
-- (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode;
+- (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode andImageDidLoad:(void(^)(CGSize imageSize))didLoad;
 - (void)stopGIF;
 - (BOOL)isGIFPlaying;
 @end

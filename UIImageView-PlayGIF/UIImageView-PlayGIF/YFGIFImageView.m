@@ -30,11 +30,11 @@
     return _sharedInstance;
 }
 - (id)init{
-	self = [super init];
-	if (self) {
-		_gifViewHashTable = [NSHashTable hashTableWithOptions:NSHashTableWeakMemory];
-	}
-	return self;
+    self = [super init];
+    if (self) {
+        _gifViewHashTable = [NSHashTable hashTableWithOptions:NSHashTableWeakMemory];
+    }
+    return self;
 }
 - (void)play{
     for (YFGIFImageView *imageView in _gifViewHashTable) {
@@ -61,31 +61,44 @@
     size_t              _index;
     size_t              _frameCount;
     float               _timestamp;
+    float               _currentProgress; //!< 当前播放时间进度
     CGImageSourceRef    _gifSourceRef;
 }
+@property (strong, nonatomic) NSOperationQueue    *renderQueue;
+;
 @end
 
 @implementation YFGIFImageView
-
-- (id)init{
-    self = [super init];
-    if(self){
-        _gifPixelSize = CGSizeZero;
+#pragma mark - property settings
+- (NSOperationQueue *)renderQueue {
+    if (!_renderQueue) {
+        _renderQueue = [NSOperationQueue new];
+        _renderQueue.maxConcurrentOperationCount = 1;
     }
-    return self;
+    return _renderQueue;
 }
 
+#pragma mark - super methods
 - (void)removeFromSuperview{
+    self.playingComplete = nil;
     [super removeFromSuperview];
     [self stopGIF];
 }
 
+#pragma mark - Gif methods
 - (void)startGIF
 {
-    [self startGIFWithRunLoopMode:NSDefaultRunLoopMode];
+    _gifPixelSize = CGSizeZero;
+    // 保证完全结束播放后，再开始新的播放
+    // Be sure to start playback after finished playing.
+    [self.renderQueue addOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self startGIFWithRunLoopMode:NSDefaultRunLoopMode andImageDidLoad:nil];
+        });
+    }];
 }
 
-- (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode
+- (void)startGIFWithRunLoopMode:(NSString * const)runLoopMode andImageDidLoad:(void(^)(CGSize imageSize))didLoad
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         if (![[YFGIFManager shared].gifViewHashTable containsObject:self]) {
@@ -96,44 +109,79 @@
                 }else{
                     gifSourceRef = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:self.gifPath], NULL);
                 }
-                if (!gifSourceRef) {
-                    return;
-                }
+                CGSize pixcelSize = [self GIFDimensionalSize:gifSourceRef];
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    // 获取图片尺寸
+                    _gifPixelSize = pixcelSize;
+                    CGFloat scale = [UIScreen mainScreen].scale;
+                    CGSize imgSize = CGSizeMake(pixcelSize.width/scale, pixcelSize.height/scale);
+                    if (didLoad) didLoad(imgSize);
+                    if (!gifSourceRef) {
+                        return;
+                    }
                     [[YFGIFManager shared].gifViewHashTable addObject:self];
                     _gifSourceRef = gifSourceRef;
                     _frameCount = CGImageSourceGetCount(gifSourceRef);
-                    _gifPixelSize = [self GIFDimensionalSize];
+                    if (![YFGIFManager shared].displayLink) {
+                        [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
+                        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
+                    }
                 });
             }
         }
     });
-    if (![YFGIFManager shared].displayLink) {
-        [YFGIFManager shared].displayLink = [CADisplayLink displayLinkWithTarget:[YFGIFManager shared] selector:@selector(play)];
-        [[YFGIFManager shared].displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:runLoopMode];
-    }
 }
 
 - (void)stopGIF{
-    if (_gifSourceRef) {
-        CFRelease(_gifSourceRef);
-        _gifSourceRef = nil;
-    }
-    [[YFGIFManager shared] stopGIFView:self];
+    [self.renderQueue addOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (_gifSourceRef) {
+                CFRelease(_gifSourceRef);
+                _gifSourceRef = nil;
+            }
+            [[YFGIFManager shared] stopGIFView:self];
+        });
+    }];
 }
 
 - (void)play{
-    float nextFrameDuration = [self frameDurationAtIndex:MIN(_index+1, _frameCount-1)];
-    if (_timestamp < nextFrameDuration) {
-        _timestamp += [YFGIFManager shared].displayLink.duration;
-        return;
+    // 时间线达到当前帧，显示当前帧
+    // The timeline reaches the current frame and the current frame will be displayed.
+    if (_timestamp >= _currentProgress) {
+        // 异步获取图像
+        // Get image asynchronously.
+        if(self.renderQueue.operationCount<=0) {
+            [self.renderQueue addOperationWithBlock:^{
+                CGImageRef ref = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index%_frameCount, NULL);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.image = [UIImage imageWithCGImage:ref];
+                    CGImageRelease(ref);
+                });
+            }];
+        }
+        else {
+            NSLog(@"Drop frame!");
+        }
+        // 将下一帧更新为当前帧
+        // The next frame is updated to the current frame.
+        _index ++;
+        float nextFrameDuration = [self frameDurationAtIndex:_index%_frameCount];
+        _currentProgress += nextFrameDuration;
+        // 声明本次播放结束
+        // Declare this playing done.
+        if (_index%_frameCount == 0) {
+            if (self.playingComplete) {
+                self.playingComplete();
+            }
+            // 未开启重复播放，完成后停止
+            // If can't repeat playing, stop after playing done.
+            if (self.unRepeat) {
+                [self stopGIF];
+                return;
+            }
+        }
     }
-	_index ++;
-	_index = _index%_frameCount;
-	CGImageRef ref = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
-	self.layer.contents = (__bridge id)(ref);
-    CGImageRelease(ref);
-    _timestamp = 0;
+    _timestamp += [YFGIFManager shared].displayLink.duration;
 }
 
 - (BOOL)isGIFPlaying{
@@ -156,22 +204,21 @@
     }
 }
 
-- (CGSize)GIFDimensionalSize{
-    if(!_gifSourceRef){
+- (CGSize)GIFDimensionalSize:(CGImageSourceRef)imgSourceRef{
+    if(!imgSourceRef){
         return CGSizeZero;
     }
     
-    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(_gifSourceRef, 0, NULL);
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(imgSourceRef, 0, NULL);
     NSDictionary *dict = (__bridge NSDictionary *)dictRef;
-    
+
     NSNumber* pixelWidth = (dict[(NSString*)kCGImagePropertyPixelWidth]);
     NSNumber* pixelHeight = (dict[(NSString*)kCGImagePropertyPixelHeight]);
-    
+
     CGSize sizeAsInProperties = CGSizeMake([pixelWidth floatValue], [pixelHeight floatValue]);
-    
+
     CFRelease(dictRef);
     
     return sizeAsInProperties;
 }
-
 @end
