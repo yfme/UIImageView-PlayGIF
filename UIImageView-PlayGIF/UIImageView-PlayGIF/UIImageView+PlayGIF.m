@@ -73,6 +73,7 @@ static const char * kTimestampKey       = "kTimestampKey";
 static const char * kPxSize             = "kPxSize";
 static const char * kGifLength          = "kGifLength";
 static const char * kIndexDurationKey   = "kIndexDurationKey";
+static const char * kRepeatLimitKey     = "kRepeatLimitKey";
 
 @implementation UIImageView (PlayGIF)
 @dynamic gifPath;
@@ -81,6 +82,7 @@ static const char * kIndexDurationKey   = "kIndexDurationKey";
 @dynamic frameCount;
 @dynamic timestamp;
 @dynamic indexDurations;
+@dynamic repeatLimit;
 
 +(void)load{
     static dispatch_once_t onceToken;
@@ -143,6 +145,14 @@ static const char * kIndexDurationKey   = "kIndexDurationKey";
 }
 -(void)setIndexDurations:(NSDictionary*)durations{
     objc_setAssociatedObject(self, kIndexDurationKey, durations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (NSNumber *)repeatLimit
+{
+    return objc_getAssociatedObject(self, kRepeatLimitKey);
+}
+- (void)setRepeatLimit:(NSNumber *)repeatLimit
+{
+    objc_setAssociatedObject(self, kRepeatLimitKey, repeatLimit, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - ACTIONS
@@ -207,6 +217,11 @@ static const char * kIndexDurationKey   = "kIndexDurationKey";
     self.timestamp = [NSNumber numberWithFloat:self.timestamp.floatValue+[PlayGIFManager shared].displayLink.duration];
     
     float loopT = fmodf([self.timestamp floatValue], [[self gifLength] floatValue]);
+    
+    if (self.repeatLimit!=nil && floorf([self.timestamp floatValue]/[[self gifLength] floatValue])>=[self.repeatLimit integerValue]) {
+        return;
+    }
+    
     self.index = @([self indexForDuration:loopT]);
     CGImageSourceRef ref = (__bridge CGImageSourceRef)([[PlayGIFManager shared].gifSourceRefMapTable objectForKey:self]);
 	CGImageRef imageRef = CGImageSourceCreateImageAtIndex(ref, self.index.integerValue, NULL);
